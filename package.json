@@ -1,0 +1,25 @@
+{
+  "name": "@chancehl/met-wallpaper",
+  "version": "1.0.0",
+  "description": "A command line utility for getting and setting a wallpaper image from the MET museum.",
+  "main": "./bin/index.js",
+  "scripts": {
+    "install-global": "sudo npm install -g .",
+    "uninstall-global": "sudo npm uninstall -g .",
+    "refresh": "npm run uninstall-global && npm run install-global",
+    "local": "DEBUG=true node ./bin/index.js",
+    "local-query": "DEBUG=true node ./bin/index.js --query DEFAULT"
+  },
+  "bin": {
+    "met-wallpaper": "./bin/index.js"
+  },
+  "keywords": [],
+  "author": "Chance Linz <clinz.dev@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "commander": "^7.1.0",
+    "tmp": "^0.2.1",
+    "wallpaper": "^4.4.2"
+  }
+}
