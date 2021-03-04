@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 const { Command } = require("commander");
-const wallpaper = require("wallpaper");
 const colors = require("colors");
 
 const RequestManager = require("./api/request-manager");
 const ImageHandler = require("./api/image-downloader");
+const WallpaperManager = require("./api/wallpaper-manager");
 
 const program = new Command();
 
@@ -23,22 +23,17 @@ program.parse(process.argv);
 
     console.log({ ...object });
   } else {
+    // Get a random object from the Met gallery
     const object = await RequestManager.get();
 
+    // Download the image to disk
     const fileLocation = await ImageHandler.download(object);
 
-    await wallpaper.set(fileLocation, { scale: "fit" });
+    // Set the image background
+    await WallpaperManager.setWallpaper(fileLocation);
 
-    console.log(
-      `Set desktop background image to ${colors.cyan(object.title)} by ${
-        (object.constituents || []).length
-          ? object.constituents.join(", ")
-          : "Unknown"
-      }.`
-    );
-
-    // Tell the user this was a successful operation
-    console.log(colors.green("Success (exiting)"));
+    // Tell the user what we did today
+    object.logObject();
 
     // Exit successfully
     process.exit(0);

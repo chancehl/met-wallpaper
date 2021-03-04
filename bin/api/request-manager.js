@@ -1,5 +1,6 @@
 const axios = require("axios").default;
 
+const Object = require("../classes/object");
 const pickRandom = require("../utils/pick-random");
 
 class RequestManager {
@@ -33,25 +34,7 @@ class RequestManager {
       );
 
       if (objectData && objectData.primaryImage) {
-        const title = objectData.title;
-        const id = objectData.objectID;
-        const department = objectData.department;
-        const period = objectData.period || "Unknown";
-        const medium = objectData.medium;
-        const imageUrl = objectData.primaryImage;
-        const constituents = (objectData.constituents || []).map(
-          (constituent) => `${constituent.name} (${constituent.role})`
-        );
-
-        object = {
-          id,
-          title,
-          department,
-          medium,
-          constituents,
-          imageUrl,
-          period,
-        };
+        object = new Object(objectData);
       }
     }
 
