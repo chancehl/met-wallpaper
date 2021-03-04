@@ -32,8 +32,11 @@ program.parse(process.argv);
     // Set the image background
     await WallpaperManager.setWallpaper(fileLocation);
 
-    // Tell the user what we did today
-    object.logObject();
+    // Tell the user this was successful
+    console.log(colors.green("Success!"));
+
+    // Log the object
+    object.log();
 
     // Exit successfully
     process.exit(0);

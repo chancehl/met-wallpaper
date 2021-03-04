@@ -15,7 +15,7 @@ class Object {
       : "Unknown";
   }
 
-  logObject() {
+  log() {
     console.log(
       `${colors.cyan(this.title)} by ${colors.cyan(
         this.constituents
