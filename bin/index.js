@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const { Command } = require("commander");
 const wallpaper = require("wallpaper");
-const { fileSync: createTmpFileSync } = require("tmp");
+const colors = require("colors");
 
 const RequestManager = require("./api/request-manager");
 const ImageHandler = require("./api/image-downloader");
@@ -24,15 +24,23 @@ program.parse(process.argv);
     console.log({ ...object });
   } else {
     const object = await RequestManager.get();
-    console.log(
-      "Fetched the following object from the met museum gallery",
-      object
-    );
 
     const fileLocation = await ImageHandler.download(object);
-    console.log("Downloaded the image to", fileLocation);
 
     await wallpaper.set(fileLocation, { scale: "fit" });
-    console.log("Set image background to", object.title);
+
+    console.log(
+      `Set desktop background image to ${colors.cyan(object.title)} by ${
+        (object.constituents || []).length
+          ? object.constituents.join(", ")
+          : "Unknown"
+      }.`
+    );
+
+    // Tell the user this was a successful operation
+    console.log(colors.green("Success (exiting)"));
+
+    // Exit successfully
+    process.exit(0);
   }
 })(program.opts());

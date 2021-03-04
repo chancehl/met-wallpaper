@@ -11,12 +11,21 @@ class ImageHandler {
       responseType: "stream",
     });
 
+    // create tmp dir
     const tmpDir = tmp.dirSync();
-    const tmpFile = path.join(tmpDir.name, `${object.id}.png`);
 
-    await response.data.pipe(fs.createWriteStream(tmpFile));
+    // come up with a file name based on the id
+    const tmpFile = path.join(tmpDir.name, `${object.id}.jpg`);
 
-    return tmpFile;
+    // pipe the result into a tmp file on disc
+    response.data.pipe(fs.createWriteStream(tmpFile));
+
+    // return a new promise that resolves/rejects once the pipe is complete
+    return new Promise((resolve, reject) => {
+      response.data.on("end", () => resolve(tmpFile));
+
+      response.data.on("error", () => reject());
+    });
   }
 }
 
