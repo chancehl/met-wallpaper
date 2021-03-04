@@ -23,7 +23,7 @@ class Object {
         this.period
       )} period. It's medium is ${colors.cyan(
         this.medium
-      )}. It is currently stored within the Metropolitan Museum of Modern Art's ${colors.cyan(
+      )}. It is currently stored within the Metropolitan Museum of Art's ${colors.cyan(
         this.department
       )} department.`
     );
