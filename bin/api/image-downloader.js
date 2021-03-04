@@ -14,7 +14,7 @@ class ImageHandler {
     const tmpDir = tmp.dirSync();
     const tmpFile = path.join(tmpDir.name, `${object.id}.png`);
 
-    response.data.pipe(fs.createWriteStream(tmpFile));
+    await response.data.pipe(fs.createWriteStream(tmpFile));
 
     return tmpFile;
   }
