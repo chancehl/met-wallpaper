@@ -12,7 +12,7 @@ const program = new Command()
 program
     .option('-q, --query <query>', 'the search term')
     .option('-m, --medium <medium>', 'the medium to be returned')
-    .option('-d, --destination', 'the destination to save the image (default is tmp dir)')
+    .option('-d, --destination <destination>', 'the destination to save the image (default is tmp dir)')
 
 program.parse(process.argv)
 
@@ -20,6 +20,7 @@ program.parse(process.argv)
 ;(async function main(options) {
     const query = options.query
     const medium = options.medium
+    const destination = options.destination
 
     const spinnerBase = `%s Finding a suitable image from the Metropolitan Museum of Art gallery`
     const spinnerForQuery = spinnerBase.concat(` for query ${colors.cyan(query)}`)
@@ -47,7 +48,7 @@ program.parse(process.argv)
         }
 
         // Download the image to disk
-        const fileLocation = await ImageHandler.download(object)
+        const fileLocation = await ImageHandler.download(object, destination)
 
         // Set the image background
         await WallpaperManager.setWallpaper(fileLocation)
@@ -61,7 +62,7 @@ program.parse(process.argv)
         // Exit successfully
         process.exit(0)
     } catch (ex) {
-        console.error('Encountered an error while fetching a wallpaper:', ex.message)
+        console.error(`\n[${colors.red('ERROR')}]: Encountered an error while fetching a wallpaper:`, ex.message)
 
         // exit with error
         process.exit(1)
