@@ -27,12 +27,8 @@ met-wallpaper
 met-wallpaper --query "cats"
 ```
 
-> Note: This is not yet supported.
-
 **With a medium:**
 
 ```
 met-wallpaper --query "cats" --medium "paintings"
 ```
-
-> Note: This is not yet supported.
