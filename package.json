@@ -9,7 +9,8 @@
     "refresh": "npm run uninstall-global && npm run install-global",
     "local": "DEBUG=true node ./bin/index.js",
     "local-query": "DEBUG=true node ./bin/index.js --query cats --medium Paintings",
-    "local-dest": "DEBUG=true node ./bin/index.js --query cats --destination /Volumes/unix/workplace/met-wallpaper/test/"
+    "local-dest": "DEBUG=true node ./bin/index.js --query cats --destination /Volumes/unix/workplace/met-wallpaper/test/",
+    "clear-offline-dir": "rm -rf ./test/**"
   },
   "bin": {
     "met-wallpaper": "./bin/index.js"
