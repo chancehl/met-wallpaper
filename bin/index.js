@@ -47,6 +47,9 @@ program.parse(process.argv)
             throw new Error(`Could not find any pieces that match query ${query} with medium ${medium}.`)
         }
 
+        // Tell the user we're now downloading
+        spinner.setSpinnerTitle(`%s Downloading image (id: ${object.id}) to disk at ${destination}`)
+
         // Download the image to disk
         const fileLocation = await ImageHandler.download(object, destination)
 
