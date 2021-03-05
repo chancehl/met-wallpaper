@@ -12,7 +12,11 @@ class RequestManager {
   static #objectEndpoint = "/objects";
   static #objectUri = this.#baseRoute.concat(this.#objectEndpoint);
 
-  static getQueryUri(query) {
+  static getQueryUri(query, medium) {
+    if (medium) {
+      return this.#searchUri.concat(`?q=${query}&medium=${medium}`);
+    }
+
     return this.#searchUri.concat(`?q=${query}`);
   }
 
@@ -41,8 +45,31 @@ class RequestManager {
     return object;
   }
 
-  static query(query) {
-    return { query, uri: this.getQueryUri(query) };
+  static async query(query, medium) {
+    const { data: queryData } = await axios.get(
+      this.getQueryUri(query, medium)
+    );
+
+    let object;
+    const objectIDs = queryData.objectIDs;
+
+    if (objectIDs == null) {
+      return null;
+    }
+
+    while (object == null) {
+      const randomObjectId = pickRandom(objectIDs);
+
+      const { data: objectData } = await axios.get(
+        this.getObjectUri(randomObjectId)
+      );
+
+      if (objectData && objectData.primaryImage) {
+        object = new Object(objectData);
+      }
+    }
+
+    return object;
   }
 }
 
