@@ -1,3 +1,3 @@
 module.exports = function pickRandom(array) {
-  return array[Math.floor(Math.random() * array.length)];
-};
+    return array[Math.floor(Math.random() * array.length)]
+}

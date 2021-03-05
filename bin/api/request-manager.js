@@ -1,76 +1,70 @@
-const axios = require("axios").default;
+const axios = require('axios').default
 
-const Object = require("../classes/object");
-const pickRandom = require("../utils/pick-random");
+const Object = require('../classes/object')
+const pickRandom = require('../utils/pick-random')
 
 class RequestManager {
-  static #baseRoute = "https://collectionapi.metmuseum.org/public/collection/v1";
+    static #baseRoute = 'https://collectionapi.metmuseum.org/public/collection/v1'
 
-  static #searchEndpoint = "/search";
-  static #searchUri = this.#baseRoute.concat(this.#searchEndpoint);
+    static #searchEndpoint = '/search'
+    static #searchUri = this.#baseRoute.concat(this.#searchEndpoint)
 
-  static #objectEndpoint = "/objects";
-  static #objectUri = this.#baseRoute.concat(this.#objectEndpoint);
+    static #objectEndpoint = '/objects'
+    static #objectUri = this.#baseRoute.concat(this.#objectEndpoint)
 
-  static getQueryUri(query, medium) {
-    if (medium) {
-      return this.#searchUri.concat(`?q=${query}&medium=${medium}`);
+    static getQueryUri(query, medium) {
+        if (medium) {
+            return this.#searchUri.concat(`?q=${query}&medium=${medium}`)
+        }
+
+        return this.#searchUri.concat(`?q=${query}`)
     }
 
-    return this.#searchUri.concat(`?q=${query}`);
-  }
-
-  static getObjectUri(id) {
-    return this.#objectUri.concat(`/${id}`);
-  }
-
-  static async get() {
-    const { data: indexData } = await axios.get(this.#objectUri);
-
-    let object;
-    const objectIDs = indexData.objectIDs;
-
-    while (object == null) {
-      const randomObjectId = pickRandom(objectIDs);
-
-      const { data: objectData } = await axios.get(
-        this.getObjectUri(randomObjectId)
-      );
-
-      if (objectData && objectData.primaryImage) {
-        object = new Object(objectData);
-      }
+    static getObjectUri(id) {
+        return this.#objectUri.concat(`/${id}`)
     }
 
-    return object;
-  }
+    static async get() {
+        const { data: indexData } = await axios.get(this.#objectUri)
 
-  static async query(query, medium) {
-    const { data: queryData } = await axios.get(
-      this.getQueryUri(query, medium)
-    );
+        let object
+        const objectIDs = indexData.objectIDs
 
-    let object;
-    const objectIDs = queryData.objectIDs;
+        while (object == null) {
+            const randomObjectId = pickRandom(objectIDs)
 
-    if (objectIDs == null) {
-      return null;
+            const { data: objectData } = await axios.get(this.getObjectUri(randomObjectId))
+
+            if (objectData && objectData.primaryImage) {
+                object = new Object(objectData)
+            }
+        }
+
+        return object
     }
 
-    while (object == null) {
-      const randomObjectId = pickRandom(objectIDs);
+    static async query(query, medium) {
+        const { data: queryData } = await axios.get(this.getQueryUri(query, medium))
 
-      const { data: objectData } = await axios.get(
-        this.getObjectUri(randomObjectId)
-      );
+        let object
+        const objectIDs = queryData.objectIDs
 
-      if (objectData && objectData.primaryImage) {
-        object = new Object(objectData);
-      }
+        if (objectIDs == null) {
+            return null
+        }
+
+        while (object == null) {
+            const randomObjectId = pickRandom(objectIDs)
+
+            const { data: objectData } = await axios.get(this.getObjectUri(randomObjectId))
+
+            if (objectData && objectData.primaryImage) {
+                object = new Object(objectData)
+            }
+        }
+
+        return object
     }
-
-    return object;
-  }
 }
 
-module.exports = RequestManager;
+module.exports = RequestManager
