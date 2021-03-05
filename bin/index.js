@@ -1,19 +1,18 @@
 #!/usr/bin/env node
 const { Command } = require('commander')
-const colors = require('colors')
 const { Spinner } = require('cli-spinner')
+const colors = require('colors')
 
 const RequestManager = require('./api/request-manager')
 const ImageHandler = require('./api/image-downloader')
 const WallpaperManager = require('./api/wallpaper-manager')
 
-const spinner = new Spinner('%s Finding a suitable image from the Metropolitan Museum of Art gallery')
-
-spinner.setSpinnerString(18)
-
 const program = new Command()
 
-program.option('-q, --query <query>', 'the search term').option('-m, --medium <medium>', 'the medium to be returned')
+program
+    .option('-q, --query <query>', 'the search term')
+    .option('-m, --medium <medium>', 'the medium to be returned')
+    .option('-d, --destination', 'the destination to save the image (default is tmp dir)')
 
 program.parse(process.argv)
 
@@ -22,50 +21,45 @@ program.parse(process.argv)
     const query = options.query
     const medium = options.medium
 
+    const spinnerBase = `%s Finding a suitable image from the Metropolitan Museum of Art gallery`
+    const spinnerForQuery = spinnerBase.concat(` for query ${colors.cyan(query)}`)
+
+    const spinner = new Spinner(query == null ? spinnerBase : spinnerForQuery)
+
+    spinner.setSpinnerString(18)
+
     try {
         // Start loading spinner
         spinner.start()
 
-        if (query) {
-            const object = await RequestManager.query(query, medium)
+        let object
 
-            if (object == null) {
-                console.warn(`Could not find any pieces that match query ${query} with medium ${medium}.`)
-            } else {
-                // Download the image to disk
-                const fileLocation = await ImageHandler.download(object)
-
-                // Set the image background
-                await WallpaperManager.setWallpaper(fileLocation)
-
-                // Tell the user this was successful
-                console.log(colors.green('Success!'))
-
-                // Log the object
-                object.log()
-
-                // Exit successfully
-                process.exit(0)
-            }
+        // If the query is null, we're going to just pick a random object. Else, search for what was given
+        if (query == null) {
+            object = await RequestManager.get()
         } else {
-            // Get a random object from the Met gallery
-            const object = await RequestManager.get()
-
-            // Download the image to disk
-            const fileLocation = await ImageHandler.download(object)
-
-            // Set the image background
-            await WallpaperManager.setWallpaper(fileLocation)
-
-            // Tell the user this was successful
-            console.log(colors.green('Success!'))
-
-            // Log the object
-            object.log()
-
-            // Exit successfully
-            process.exit(0)
+            object = await RequestManager.query(query, medium)
         }
+
+        // If object was null at this point it means the users's query returned no results and we should exit unsuccessfully (defer to catch block)
+        if (object == null) {
+            throw new Error(`Could not find any pieces that match query ${query} with medium ${medium}.`)
+        }
+
+        // Download the image to disk
+        const fileLocation = await ImageHandler.download(object)
+
+        // Set the image background
+        await WallpaperManager.setWallpaper(fileLocation)
+
+        // Tell the user this was successful
+        console.log(colors.green('Success!'))
+
+        // Log the object
+        object.log()
+
+        // Exit successfully
+        process.exit(0)
     } catch (ex) {
         console.error('Encountered an error while fetching a wallpaper:', ex.message)
 
