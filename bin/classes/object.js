@@ -25,7 +25,7 @@ class Object {
         this.medium
       )}. It is currently stored within the Metropolitan Museum of Art's ${colors.cyan(
         this.department
-      )} department.`
+      )} department. (${colors.cyan(this.id)})`
     );
   }
 }
