@@ -48,7 +48,7 @@ program.parse(process.argv)
         }
 
         // Tell the user we're now downloading
-        spinner.setSpinnerTitle(`%s Downloading image (id: ${object.id}) to disk at ${destination}`)
+        spinner.setSpinnerTitle(`%s Downloading image (id: ${object.id}) to disk.`)
 
         // Download the image to disk
         const fileLocation = await ImageHandler.download(object, destination)
