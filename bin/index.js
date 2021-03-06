@@ -57,7 +57,7 @@ program.parse(process.argv)
         await WallpaperManager.setWallpaper(fileLocation)
 
         // Tell the user this was successful
-        console.log(colors.green('Success!'))
+        console.log('\n' + colors.green('Success!'))
 
         // Log the object
         object.log()
