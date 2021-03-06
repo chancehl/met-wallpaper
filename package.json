@@ -1,6 +1,6 @@
 {
   "name": "@chancehl/met-wallpaper",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A command line utility for getting and setting a wallpaper image from the Metropolitan Museum of Art.",
   "main": "./bin/index.js",
   "scripts": {
