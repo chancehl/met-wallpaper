@@ -10,7 +10,8 @@
     "local": "DEBUG=true node ./bin/index.js",
     "local-query": "DEBUG=true node ./bin/index.js --query cats --medium Paintings",
     "local-dest": "DEBUG=true node ./bin/index.js --query cats --destination /Volumes/unix/workplace/met-wallpaper/test/",
-    "clear-offline-dir": "rm -rf ./test/**"
+    "clear-offline-dir": "rm -rf ./test/**",
+    "test": "jest"
   },
   "bin": {
     "met-wallpaper": "./bin/index.js"
@@ -27,6 +28,7 @@
     "wallpaper": "^4.4.2"
   },
   "devDependencies": {
+    "jest": "^27.1.1",
     "prettier": "^2.2.1"
   }
 }
